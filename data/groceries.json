@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Eggs",
+    "price": 45,
+    "category": "Student"
+  },
+  {
+    "name": "Rice",
+    "price": 30,
+    "category": "Student"
+  },
+  {
+    "name": "Bread",
+    "price": 18,
+    "category": "Student"
+  }
+]
