@@ -4,7 +4,16 @@
 {% block content %}
 <div class="dashboard-wrapper">
   <h1>Welcome, {{ user.username }} 👋</h1>
-  <p>If you can see this page, your login flow works.</p>
+
+  {% if user.profile %}
+  <p class="subtitle">
+    {{ user.profile.age }} years old ·
+    {% if user.profile.is_student %}Student{% else %}Adult{% endif %} ·
+    {% if user.profile.lives_alone %}Lives alone{% else %}{{ user.profile.household_members|length }} housemate(s){% endif %}
+  </p>
+  {% endif %}
+
+  <a href="{{ url_for('profile.setup') }}" class="btn-secondary">Edit profile</a>
   <a href="{{ url_for('auth.logout') }}" class="btn-secondary">Log Out</a>
 </div>
 {% endblock %}

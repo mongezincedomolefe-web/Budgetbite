@@ -14,6 +14,8 @@ def index():
 @main_bp.route("/dashboard")
 @login_required
 def dashboard():
-    # This page only renders if login_required lets you through —
-    # it's the quickest way to test that your login flow actually works.
+    # Anyone without a profile yet (including accounts created before
+    # this feature existed) gets sent to fill it in first.
+    if current_user.profile is None:
+        return redirect(url_for("profile.setup"))
     return render_template("dashboard.html", user=current_user)
