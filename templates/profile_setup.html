@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Your Profile · BudgetBite{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+  <div class="profile-card">
+    <h1 class="brand">Tell us about your household</h1>
+    <p class="subtitle">This helps BudgetBite suggest what's on your grocery list.</p>
+
+    <form method="POST" action="{{ url_for('profile.setup') }}" class="profile-form">
+
+      <div class="form-group">
+        <label for="age">Your age</label>
+        <input type="number" id="age" name="age" min="1" max="120" required>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="is_student" name="is_student" onchange="toggleSections()">
+        <label for="is_student">I'm a student</label>
+      </div>
+
+      <div id="living-section" class="form-section">
+        <label>Do you live alone?</label>
+        <div class="radio-row">
+          <label><input type="radio" name="lives_alone" value="yes" checked onchange="toggleHousehold()"> Yes</label>
+          <label><input type="radio" name="lives_alone" value="no" onchange="toggleHousehold()"> No</label>
+        </div>
+      </div>
+
+      <div id="household-section" class="form-section" style="display:none;">
+        <label>Who do you live with?</label>
+        <div id="member-rows"></div>
+        <button type="button" class="btn-secondary" onclick="addMemberRow()">+ Add person</button>
+      </div>
+
+      <div class="form-section">
+        <label>Allergies (tick any that apply)</label>
+        <div class="checkbox-grid">
+          {% for allergy in common_allergies %}
+          <label class="checkbox-pill">
+            <input type="checkbox" name="allergy[]" value="{{ allergy }}"> {{ allergy }}
+          </label>
+          {% endfor %}
+        </div>
+        <input type="text" name="allergy_other" placeholder="Other allergies, separated by commas">
+      </div>
+
+      <div class="form-section">
+        <label>Dietary preferences (tick any that apply)</label>
+        <div class="checkbox-grid">
+          {% for diet in diet_options %}
+          <label class="checkbox-pill">
+            <input type="checkbox" name="diet[]" value="{{ diet }}"> {{ diet }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="monthly_budget">Monthly grocery budget (R)</label>
+        <input type="number" id="monthly_budget" name="monthly_budget" min="0" step="0.01">
+      </div>
+
+      <button type="submit" class="btn-primary">Save profile</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // One template row, cloned each time "+ Add person" is clicked.
+  function addMemberRow() {
+    const container = document.getElementById('member-rows');
+    const row = document.createElement('div');
+    row.className = 'member-row';
+    row.innerHTML = `
+      <input type="number" name="member_age[]" placeholder="Age" min="0" max="120" required>
+      <select name="member_gender[]" required>
+        <option value="">Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <button type="button" class="btn-remove" onclick="this.parentElement.remove()">&times;</button>
+    `;
+    container.appendChild(row);
+  }
+
+  // A student is treated as living alone, so the whole "who do you live
+  // with" question disappears — there's nothing to ask.
+  function toggleSections() {
+    const isStudent = document.getElementById('is_student').checked;
+    document.getElementById('living-section').style.display = isStudent ? 'none' : 'block';
+    if (isStudent) {
+      document.getElementById('household-section').style.display = 'none';
+    } else {
+      toggleHousehold();
+    }
+  }
+
+  // Only show the household-member rows if "No" (doesn't live alone) is picked.
+  function toggleHousehold() {
+    const livesAloneNo = document.querySelector('input[name="lives_alone"][value="no"]').checked;
+    document.getElementById('household-section').style.display = livesAloneNo ? 'block' : 'none';
+    if (livesAloneNo && document.getElementById('member-rows').children.length === 0) {
+      addMemberRow();
+    }
+  }
+</script>
+{% endblock %}
