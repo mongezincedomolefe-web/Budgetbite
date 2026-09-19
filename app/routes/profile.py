@@ -20,6 +20,7 @@ def setup():
 
     if request.method == "POST":
         age = request.form.get("age", type=int)
+        gender = request.form.get("gender")
         is_student = "is_student" in request.form
 
         # Students are treated as living alone (see the reasoning behind
@@ -36,10 +37,15 @@ def setup():
             flash("Please enter a valid age.", "danger")
             return redirect(url_for("profile.setup"))
 
+        if not gender:
+            flash("Please select a gender.", "danger")
+            return redirect(url_for("profile.setup"))
+
         # Update in place if a profile already exists, otherwise create one.
         if existing:
             profile = existing
             profile.age = age
+            profile.gender = gender
             profile.is_student = is_student
             profile.lives_alone = lives_alone
             profile.monthly_budget = monthly_budget
@@ -52,6 +58,7 @@ def setup():
             profile = Profile(
                 user_id=current_user.id,
                 age=age,
+        gender=gender,
                 is_student=is_student,
                 lives_alone=lives_alone,
                 monthly_budget=monthly_budget,

@@ -14,6 +14,16 @@
         <input type="number" id="age" name="age" min="1" max="120" required>
       </div>
 
+	<div class="form-group">
+         <label for="gender">Your gender</label>
+         <select id="gender" name="gender" required>
+          <option value="">Select one</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
       <div class="form-check">
         <input type="checkbox" id="is_student" name="is_student" onchange="toggleSections()">
         <label for="is_student">I'm a student</label>

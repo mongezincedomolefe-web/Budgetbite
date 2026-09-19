@@ -8,6 +8,7 @@ class Profile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), unique=True, nullable=False)
 
     age = db.Column(db.Integer, nullable=False)
+    gender = db.Column(db.String(20), nullable=False)
     is_student = db.Column(db.Boolean, default=False)
     lives_alone = db.Column(db.Boolean, default=True)  # ignored/true when is_student is True
     monthly_budget = db.Column(db.Float)
