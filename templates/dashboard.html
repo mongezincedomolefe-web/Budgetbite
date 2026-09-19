@@ -1,10 +1,74 @@
+cat > templates/dashboard.html << 'EOF'
 {% extends "base.html" %}
 {% block title %}Dashboard · BudgetBite{% endblock %}
 
 {% block content %}
 <div class="dashboard-wrapper">
   <h1>Welcome, {{ user.username }} 👋</h1>
-  <p>If you can see this page, your login flow works.</p>
+
+  {% if user.profile %}
+  <div class="details-card">
+    <h2>Your details</h2>
+
+    <div class="details-row">
+      <span class="details-label">Age</span>
+      <span>{{ user.profile.age }}</span>
+    </div>
+    <div class="details-row">
+      <span class="details-label">Gender</span>
+      <span>{{ user.profile.gender|capitalize }}</span>
+    </div>
+    <div class="details-row">
+      <span class="details-label">Status</span>
+      <span>{% if user.profile.is_student %}Student{% else %}Adult{% endif %}</span>
+    </div>
+    <div class="details-row">
+      <span class="details-label">Living situation</span>
+      <span>{% if user.profile.lives_alone %}Lives alone{% else %}Lives with others{% endif %}</span>
+    </div>
+
+    {% if not user.profile.lives_alone and user.profile.household_members %}
+    <div class="details-row">
+      <span class="details-label">Household members</span>
+      <span>
+        {% for member in user.profile.household_members %}
+          {{ member.age }} ({{ member.gender }}){% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </span>
+    </div>
+    {% endif %}
+
+    <div class="details-row">
+      <span class="details-label">Allergies</span>
+      <span>
+        {% if user.profile.allergies %}
+          {{ user.profile.allergies|map(attribute='name')|join(', ') }}
+        {% else %}
+          None listed
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="details-row">
+      <span class="details-label">Dietary preferences</span>
+      <span>
+        {% if user.profile.dietary_preferences %}
+          {{ user.profile.dietary_preferences|map(attribute='name')|join(', ') }}
+        {% else %}
+          None listed
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="details-row">
+      <span class="details-label">Monthly budget</span>
+      <span>{% if user.profile.monthly_budget %}R{{ "%.2f"|format(user.profile.monthly_budget) }}{% else %}Not set{% endif %}</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <a href="{{ url_for('profile.setup') }}" class="btn-secondary">Edit profile</a>
   <a href="{{ url_for('auth.logout') }}" class="btn-secondary">Log Out</a>
 </div>
 {% endblock %}
+EOF

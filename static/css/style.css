@@ -238,3 +238,35 @@ body {
 .flash-danger  { background: #fee2e2; color: #991b1b; }
 .flash-info    { background: #dbeafe; color: #1e40af; }
 .flash-warning { background: #fef9c3; color: #854d0e; }
+
+.details-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  padding: 1.75rem 2rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.details-card h2 {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.details-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #f0f1f3;
+  font-size: 0.9rem;
+}
+
+.details-row:last-child {
+  border-bottom: none;
+}
+
+.details-label {
+  color: #6b7280;
+  font-weight: 600;
+}
